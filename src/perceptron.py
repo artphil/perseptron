@@ -1,3 +1,5 @@
+import string
+
 """
 Classe Perceptron
 """
@@ -5,51 +7,104 @@ Classe Perceptron
 
 class Perceptron():
 
-    epocas = 0
+    epocas = 5
 
     contador = 0
 
     aprendizado = {}
 
     # Executa o teste
-    def perceptron_execute(w):
-        # 
-        saida =
+    def perceptron_execute(w, linha) :
+        # Teste para cada linha
+
+        tamanho = len(linha)
+        for i in range(0, tamanho) :
+            if w.has_key(linha[i]) :
+                if w[linha[i]] > 0 :
+                    spam += 1
+
+        print "spam %d \nn palav %d \nrazao %f" % (spam, tamanho, float(spam)/tamanho)
+        return float(spam) / tamanho
 
     # Treina o perceptor
     def perceptron_train(data):
         # Para cada epoca
-        for i in range(epocas):
-            # Para cada entrada
-            for j in range(len(data)):
-                resultado = int(data[i][0])
-                w = data[i][1:]
-                # Executa o teste de spam
-                saida = perceptron_execute(w, data)
+        w = {}
 
-                if saida != data[i][0]:
-                    novoPeso(i, saida)
-                    treinou = false
+        print "W inicial = " + w
 
-            contador += 1
+        for j in range(len(data)):
+            resultado = int(data[i][0])
+            linha = data[i][1:]
+            # Executa o teste de spam
+            saida = perceptron_execute(w, linha)
 
-    if treinou == false & & contador < epocas
-    perceptron_train(data)
+            if saida != resultado:
+                novoPeso(w, linha, saida)
 
-    # Testa o
+                print "Novo W = " + w
+
+        return w
+    # Testa a entrada no perceptron
     def perceptron_test(w, data):
-        ocorrencias = 0
 
-        for i in range(1, len(data)):
+        contador = 0
+        for j in range(len(data)):
+            resultado = int(data[i][0])
+            linha = data[i][1:]
+            # Executa o teste de spam
+            saida = perceptron_execute(w, linha)
 
-        somarorio = (data[0] * w[0]) + (data[1] * w[1]) + ((-1) * w[2])
+            if saida != resultado:
+                contador += 1
 
-        if somarorio >= 0:
-            return 1
+            print "Contados %d " % contador
+            print  "Razao %d "% contador / len(data)
+        return contador / len(data)
 
-        return 0
+    def mudaPeso(w, linha, saida):
+        for i in range(0, len(linha)):
+            if saida > 0 :
+                w[linha[i]] += 1
+            elif w.has_key(linha[i]) :
+                if w[linha[i]] > 0 :
+                    aprendizado[w[i]] -= 1
+            else :
+                w[linha[i]] = 0
 
-    def novoPeso(i, saida):
-        w[0] = w[0] + (1 * (aprendizado[i][2] - saida) * aprendizado[i][0])
-        w[1] = w[1] + (1 * (aprendizado[i][2] - saida) * aprendizado[i][1])
-        w[2] = w[2] + (1 * (aprendizado[i][2] - saida) * (-1))
+        print "Novo W = " + w
+
+"""
+Programa principal
+"""
+
+if __name__ == "__main__":
+
+    treino = open('spam_train.txt', 'r')
+    data_train = []
+
+    i = 0
+    while treino and i < 1000 :
+        linha = string.split(treino.readline())
+        print linha
+        data_train[i:i][:] = linha
+        print "add %d" % i
+        i += 1
+
+    #for j in range(100) :
+    print data_train
+
+    perceptron = Perceptron()
+
+    w = perceptron.perceptron_train(data_train)
+
+    teste = open('spam_test.txt', 'r')
+    data_test = []
+'''
+    i = 0
+    while teste :
+        data_test[i:i] = teste.readline()
+        i += 1
+
+    perceptron.perceptron_test(w, data_train)
+'''
