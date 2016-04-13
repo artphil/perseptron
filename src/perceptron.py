@@ -1,4 +1,5 @@
 import string
+from collections import Counter
 
 """
 Classe Perceptron
@@ -7,11 +8,55 @@ Classe Perceptron
 
 class Perceptron():
 
-    epocas = 5
+    testes = 4000   # Numero de testes a considerar
+    pesos = list()  # Peso de aprendizagem
+    ocorrencias = Counter()
+    lista_palavras = set()
+    resultados = list()
+    matriz = list()
 
-    contador = 0
+    # Construtor que iinicializa um w ja treinado
+    def __init__ (self, *treino) :
 
-    aprendizado = {}
+        pass
+
+    # cria a lista de palavras que mais repetem
+    def pega_palavras (self, data) :
+        # lista de palavras unicas
+        linha = list()
+        emails = list()
+
+        for i in range(self.testes) :
+            palavras = set()
+            linha = string.split(data.readline())
+
+            self.resultados.append(int(linha[0]))
+            emails.append(linha)
+            for item in linha[1:] :
+                palavras.add(item)
+
+            for item in palavras :
+                self.ocorrencias[item] += 1
+                if self.ocorrencias[item] >= 30 :
+                    self.lista_palavras.add(item)
+
+        return emails
+
+    def treino (self, data) :
+        emails = self.pega_palavras (data)
+        lista_palavras = list(self.lista_palavras)
+
+        for i in range(self.testes) :
+            incidencia = [0] * len(lista_palavras)
+            for item in emails[i] :
+                if item in lista_palavras :
+                    indice = lista_palavras.index(item)
+                    incidencia[indice] = 1
+
+            self.matriz.append((self.resultados[i], incidencia[:]))
+
+        print self.matriz
+
 
     # Executa o teste
     def perceptron_execute(w, linha) :
@@ -33,10 +78,15 @@ class Perceptron():
 
         print "W inicial = " + w
 
-        for j in range(len(data)):
-            resultado = int(data[i][0])
-            linha = data[i][1:]
-            # Executa o teste de spam
+        ##for j in range(len(data)):
+        i = 0
+        while data and i < 1000 :
+            linha = string.split(data.readline())
+            print linha
+            print "treino %d" % i
+            i += 1
+            resultado = int(linha[0])
+            del linha[0]
             saida = perceptron_execute(w, linha)
 
             if saida != resultado:
@@ -83,24 +133,29 @@ if __name__ == "__main__":
     treino = open('spam_train.txt', 'r')
     data_train = []
 
-    i = 0
+    """i = 0
     while treino and i < 1000 :
         linha = string.split(treino.readline())
         print linha
         data_train[i:i][:] = linha
         print "add %d" % i
-        i += 1
+        i += 1"""
 
     #for j in range(100) :
     print data_train
 
     perceptron = Perceptron()
 
-    w = perceptron.perceptron_train(data_train)
+    # w = perceptron.perceptron_train(treino)
+    words = perceptron.treino(treino)
 
+    print perceptron.lista_palavras
+    print "numero de palavras = %d " % len(perceptron.lista_palavras)
+    treino.close()
+'''
     teste = open('spam_test.txt', 'r')
     data_test = []
-'''
+
     i = 0
     while teste :
         data_test[i:i] = teste.readline()
